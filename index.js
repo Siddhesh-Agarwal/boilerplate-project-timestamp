@@ -24,6 +24,31 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
+// Timestamp Microservice
+app.get("/api/:date?", function (req, res) {
+	let date = req.params.date;
+	let unix;
+	let utc;
+  
+	if (date) {
+		if (/\d{5,}/.test(date)) {
+			unix = parseInt(date);
+			utc = new Date(unix).toUTCString();
+		} else {
+			utc = new Date(date).toUTCString();
+			unix = new Date(utc).getTime();
+		}
+		if (utc == "Invalid Date") {
+			res.json({error: utc});
+		} else {
+			res.json({unix: unix, utc: utc});
+		}
+	} else {
+		unix = new Date().getTime();
+		utc = new Date().toUTCString();
+		res.json({unix: unix, utc: utc});
+	}
+});
 
 
 // listen for requests :)
